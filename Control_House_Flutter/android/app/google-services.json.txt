@@ -1,1 +1,3 @@
-Đặt config google-services.json nằm cùng cấp với file này trong app/src
+Đặt file google-services.json nằm cùng cấp với file này trong app/src
+
+Khi push lên github vì có config trong .gitignore nên file config firebase sẽ không hiển thị trên github đâu mà chỉ nằm trên local
