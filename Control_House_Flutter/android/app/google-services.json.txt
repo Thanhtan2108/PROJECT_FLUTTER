@@ -1,0 +1,1 @@
+Đặt config google-services.json nằm cùng cấp với file này trong app/src

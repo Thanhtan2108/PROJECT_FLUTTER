@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'pages/sharepage.dart';
+import 'pages/edit.dart';
+import 'pages/logout.dart';
 
 void main() => runApp(const MyApp());
 
@@ -6,7 +9,6 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   static const appTitle = 'Drawer Demo';
-
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +30,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _selectedIndex = 0;
 
-  // NON-STACK
+  static const TextStyle optionStyle = TextStyle(
+    fontSize: 30,
+    fontWeight: FontWeight.bold,
+  );
 
-  //
+  static const List<Widget> _widgetOptions = <Widget>[
+    Text('Index 0: Home', style: optionStyle),
+    Text('Index 1: profile', style: optionStyle),
+    Text('Index 2: Friends', style: optionStyle),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,71 +67,46 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
 
-      // NON-STACK
-      body: Center(
-        child: Text (
-          'Drawer'
-        ),
-      ),
-      //
+      body: Center(child: _widgetOptions[_selectedIndex]),
 
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(color: Color.fromARGB(255, 100, 196, 217)),
-              child: Text('Drawer Header', style: TextStyle(fontSize: 25, 
-              fontWeight: FontWeight.w500),textAlign: TextAlign.center,),
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 100, 196, 217),
+              ),
+              child: Text(
+                'Drawer Header',
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
+              ),
             ),
             ListTile(
               leading: const Icon(Icons.home),
               title: const Text('Home'),
-
-              // NON-STACK
-
-              //
-
+              selected: _selectedIndex == 0,
               onTap: () {
-
-                // NON-STACK
-
-                //
-
+                _onItemTapped(0);
                 Navigator.pop(context);
               },
             ),
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('profile'),
-
-              //NON-SATCK
-              
-              //
-
+              selected: _selectedIndex == 1,
               onTap: () {
-                
-                //NON-STACK
-
-                //
-                
+                _onItemTapped(1);
                 Navigator.pop(context);
               },
             ),
             ListTile(
               leading: const Icon(Icons.people),
               title: const Text('Friends'),
-
-              // NON-STACK
-
-              //
-
+              selected: _selectedIndex == 2,
               onTap: () {
-                
-                //NON-STACK
-
-                //
-
+                _onItemTapped(2);
                 Navigator.pop(context);
               },
             ),
@@ -125,6 +116,10 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('Share'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => sharepages())
+                );
               },
             ),
             ListTile(
@@ -132,6 +127,10 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('Edit Profile'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => editpage())
+                );
               },
             ),
             ListTile(
@@ -139,8 +138,12 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('Log Out'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => logoutpage())
+                );
               },
-            ),                                    
+            ),
           ],
         ),
       ),
