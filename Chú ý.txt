@@ -1,0 +1,1 @@
+đa phần các project được tạo và code trên VScode nên khi mở bằng androi studio thì đi đến setting và thêm dòng này vào mục Dart C:\Users\nthan\AppData\Local\Flutter\flutter\bin\cache\dart-sdk

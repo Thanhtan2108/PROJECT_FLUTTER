@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../rooms/bedroom.dart'; // import class Bedroom từ file khác
 import '../rooms/livingroom.dart';
 import '../rooms/kitchen.dart';
-// import 'local_auth.dart';
 import '../login/login.dart'; // để logout quay về màn hình login (mylogin)
 
 // ------------------ Home Page ------------------
@@ -33,6 +32,7 @@ class MyHomePage extends StatelessWidget {
           child: Text("M Y H O M E", style: TextStyle(fontWeight: FontWeight.w600),),),
         backgroundColor: const Color.fromRGBO(195, 210, 255, 1), 
       ),
+
       drawer: Drawer (
         child: Container(
           color: const Color.fromRGBO(195, 210, 255, 1),
@@ -75,6 +75,7 @@ class MyHomePage extends StatelessWidget {
           ),
         )
       ),
+      
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

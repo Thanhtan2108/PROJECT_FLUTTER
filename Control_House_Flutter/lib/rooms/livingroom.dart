@@ -119,7 +119,7 @@ class _LivingroomState extends State<Livingroom> {
                         ),
                       ),
 
-                      // Hình ảnh đổi theo switch
+                      // Hình ảnh đổi theo giá trị trên firebase
                       Positioned(
                         left: 41,
                         top: 48,
@@ -135,7 +135,7 @@ class _LivingroomState extends State<Livingroom> {
                         ),
                       ),
 
-                      // Switch
+                      // Thay đổi giá trị từ Switch gửi lên Firebase
                       Positioned(
                         left: 53,
                         top: 144,

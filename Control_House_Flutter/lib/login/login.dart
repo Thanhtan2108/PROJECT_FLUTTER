@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:loginscreen/local_auth.dart';
-// import 'package:loginscreen/register.dart';
+
 import '../homePage/homepage.dart';
 import 'local_auth.dart';
 import 'register.dart';
@@ -22,7 +21,9 @@ class _myloginState extends State<mylogin> {
     LocalAuth.getSavedEmail().then((e) {
       if (e != null) _emailCtrl.text = e;
       // Nếu muốn auto-fill password luôn:
-      LocalAuth.getSavedPassword().then((p) { if (p != null) _passCtrl.text = p; });
+      LocalAuth.getSavedPassword().then((p) { 
+        if (p != null) _passCtrl.text = p; 
+      });
       setState(() {});
     });
   }
