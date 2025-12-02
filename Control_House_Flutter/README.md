@@ -15,6 +15,8 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+## [Xem trước 1 vài định nghĩa, khái niệm quan trọng trong Flutter tại đây](./Explain/DEFINE.md)
+
 ## Liên Kết Với Database
 
 [Xem hướng dẫn liên kết tại đây](https://www.youtube.com/watch?v=dyYiqlKBBKM)
@@ -55,6 +57,77 @@ import 'package:firebase_database/firebase_database.dart';
 final DatabaseReference _variablePath = FirebaseDatabase.instance.ref('Đường dẫn đến nơi muốn lưu data trên firebase realtime',);
 ```
 
+###### 🧩 1. FirebaseDatabase là gì?
+
+- `FirebaseDatabase` là lớp đại diện cho `Firebase Realtime Database` trong Flutter.
+
+- Nó là “cửa ngõ” để bạn làm mọi thứ với `database`:
+
+  - đọc dữ liệu
+
+  - ghi dữ liệu
+
+  - lắng nghe thay đổi
+
+  - lấy `reference` đến một vị trí trong `tree của database`
+
+###### 🧩 2 .instance là gì?
+
+- `instance` = `Singleton pattern`.
+
+- Firebase sử dụng singleton để đảm bảo:
+
+  - Ứng dụng của bạn chỉ có `1` kết nối tới `Realtime Database`, không bị mở nhiều kết nối lãng phí tài nguyên.
+
+  - `FirebaseDatabase.instance` nghĩa là:
+
+    - Lấy ra đối tượng `FirebaseDatabase` duy nhất trong ứng dụng (chỉ tạo duy nhất 1 đối tượng)
+
+    - Không tạo mới mỗi lần bạn gọi
+
+    - Tưởng tượng nó như:
+
+    ```dart
+    FirebaseDatabase database = FirebaseDatabase.instance;
+    ```
+
+###### 🧩 3 .ref() là gì?
+
+- `.ref()` viết đầy đủ là: `DatabaseReference ref()`
+
+- Nó trả về một `DatabaseReference` — là một "điểm" trong `cây Realtime Database`.
+
+- Ví dụ database của bạn:
+
+```text
+root
+ ├── users
+ ├── products
+ └── settings
+```
+
+- Khi bạn gọi:
+
+```dart
+FirebaseDatabase.instance.ref()
+```
+
+→ bạn đang lấy reference đến root (/) của database.
+
+\* **📌 Bạn có thể đi sâu hơn bằng cách truyền path:**
+
+- Lấy đến node con:
+
+```dart
+FirebaseDatabase.instance.ref('users');
+```
+
+- Lấy đến node cụ thể:
+
+```dart
+FirebaseDatabase.instance.ref('users/user123');
+```
+
 ##### Set/Get data Firebase
 
 Tất cả việc “lấy data từ database về” đều được thực hiện thông qua `StreamBuilder<DatabaseEvent>`. Đây chính là nơi app lắng nghe dữ liệu thay đổi từ Firebase và cập nhật giao diện theo thời gian thực.
@@ -74,28 +147,142 @@ final bool boolValue = value.toString() == "true" || value.toString() == "1";
 final String stringValue = value.toString();
 ```
 
-Áp dụng và tinh chỉnh nhẹ trong code
+Áp dụng và tinh chỉnh nhẹ trong code, Lấy dữ liệu dạng bool từ firebase
 
 ```dart
-// Lấy đữu liệu dạng bool từ firebase
 StreamBuilder<DatabaseEvent>(
   stream: _variablePath.child('đối tượng cần lấy data trên Firebase').onValue, // Lấy dữ liệu của đối tượng từ Firebase
   builder: (context, snapshot) {
     final bool variableState = (snapshot.data?.snapshot.value ?? 0) == 1 ; // Dữ liệu nhận về
   },
 )
+```
 
-/*
-lệnh: 
+**Phân tích đoạn code lấy dữ liệu dạng bool:**
+
+```dart
 final bool variableState = (snapshot.data?.snapshot.value ?? 0) == 1 ;
 
 phân tích rõ ra là:
 final data = snapshot.data?.snapshot.value;
 final value = data ?? 0;
 final bool isOn = value == 1;
-*/
+```
 
-// Lấy dữ liệu có thể thay đổi kiểu từ firebase
+Cụ thể:
+
+🧩 1️⃣ Phân tích đoạn code
+
+```dart
+final bool isOn = (snapshot.data?.snapshot.value ?? 0) == 1;
+```
+
+Chúng ta đang quan tâm đến phần này:
+
+```dart
+(snapshot.data?.snapshot.value ?? 0)
+```
+
+🧠 2️⃣ Trường hợp 1: snapshot.data `null`
+
+Nếu `snapshot.data` là `null`, thì toán tử `?.` sẽ dừng ở đó và trả về `null`.
+
+Khi đó biểu thức này:
+
+```dart
+snapshot.data?.snapshot.value
+```
+
+→ trả về `null`
+
+Sau đó `?? 0` sẽ được kích hoạt:
+
+```dart
+(null ?? 0) → 0
+```
+
+Kết quả cuối cùng của toàn biểu thức:
+
+```dart
+(0 == 1) → false
+```
+
+✅ Không lỗi, isOn = false.
+
+🧠 3️⃣ Trường hợp 2: `snapshot.data` `không null`, và `snapshot.value = null`
+
+```dart
+snapshot.data?.snapshot.value → null
+(null ?? 0) → 0
+(0 == 1) → false
+```
+
+✅ Kết quả vẫn an toàn, isOn = false.
+
+🧠 4️⃣ Trường hợp 3: `snapshot.value không null`
+
+Giả sử Firebase có dữ liệu, ví dụ:
+
+| Giá trị Firebase (`snapshot.value`) | Kết quả | Diễn giải |
+| --- | --- | --- |
+| `1` | ✅ `true` | Switch đang bật |
+| `0` | ✅ `false` | Switch đang tắt |
+| `"1"` (chuỗi) | ✅ `true` | Chuỗi "1" được chuyển thành số 1 |
+| `true` | ⚠️ có thể lỗi | Kiểu bool không thể so sánh trực tiếp với số 1 |
+| `{}` hoặc `[]` | ⚠️ lỗi kiểu dữ liệu | Không thể so sánh object/array với 1 |
+
+🧩 5️⃣ Diễn giải logic chính xác khi `snapshot.value` có dữ liệu
+
+Giả sử:
+
+```dart
+snapshot.data?.snapshot.value = 1
+```
+
+Thì:
+
+```dart
+(snapshot.data?.snapshot.value ?? 0) == 1
+→ (1 ?? 0) == 1
+→ 1 == 1
+→ true
+```
+
+✅ Kết quả cuối cùng:
+
+isOn = true;
+
+🧩 6️⃣ Nếu `snapshot.value` `không null` nhưng kiểu dữ liệu khác
+
+Trường hợp Firebase lưu giá trị kiểu bool:
+
+```dart
+snapshot.value = true;
+```
+
+Thì:
+
+```dart
+(true ?? 0) == 1
+```
+
+→ true == 1 → ❌ Sai (vì true và 1 khác kiểu)
+
+Cách khắc phục:
+
+```dart
+final bool isOn = snapshot.data?.snapshot.value == true;
+```
+
+hoặc
+
+```dart
+final bool isOn = (snapshot.data?.snapshot.value == 1 || snapshot.data?.snapshot.value == true);
+```
+
+Lấy dữ liệu có thể thay đổi kiểu từ firebase
+
+```dart
 StreamBuilder<DatabaseEvent>(
   stream: _variablePath.child('đối tường cần lấy data trên Firebase').onValue, // Lấy dữ liệu
   builder: (context, snapshot) {

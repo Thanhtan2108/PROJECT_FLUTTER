@@ -343,7 +343,7 @@ Future<void> main() async {
 
   - Khởi tạo các module Firebase (Auth, Database, v.v…).
 
-➡️ Quá trình này `mất thời gian`, và Flutter `không thể biết chính xác khi nào hoàn tất`, nên nó trả về một `Future` — đại diện cho `“kết quả trong tương lai”`.
+➡️ Quá trình này `mất thời gian`, và Flutter `không thể biết chính xác khi nào hoàn tất`, nên nó trả về một `Future<void>` — đại diện cho `“kết quả trong tương lai”`.
 
 Cụ thể:
 
