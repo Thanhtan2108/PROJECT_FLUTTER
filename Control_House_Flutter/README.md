@@ -21,9 +21,33 @@ samples, guidance on mobile development, and a full API reference.
 
 [Xem hướng dẫn liên kết tại đây](https://www.youtube.com/watch?v=dyYiqlKBBKM)
 
+## Ẩn file google-services.json để không lộ key secret
+
+### **Chú ý:** Thực hiện lần đầu tiên khi tạo 1 repo mới trên github và push lên lần đầu
+
+Thêm dòng sau vào file `.gitignore` trong thư mục gốc của project Flutter
+
+```dart
+/android/app/google-services.json
+```
+
+Sau đó thực hiện các lệnh để push lên repo github
+
+```bash
+git add .
+git commit -m 'note message'
+git push origin <branch name>
+```
+
+File `google-services.json` sẽ bị ẩn hoàn toàn khỏi repo kể cả trên máy local và trên Github
+
+### Dùng cách như trên, nó sẽ hide cả file trên cả repo local, tốt nhất là tạo 1 file mẫu để khi ai clone về thì tự set file `google-services.json` của mình vào `android/app/`
+
+### Tạo file `google-services-example.json` trong thư mục `android/app/`, copy toàn bộ nội dung từ file `google-services.json` vào file này, sau đó thực hiện commit và push lên repo
+
 ### Liên kết DB với code
 
-#### Trong main.dart, thực hiện
+#### Trong main.dart, thực hiện import thư viện firebase_core
 
 ```dart
 import 'package:firebase_core/firebase_core.dart';
@@ -43,7 +67,7 @@ Future<void> main() async {
 
 **[Hoặc chỉ đọc giải thích liên quan đến Firebase trong main](./Explain/ExplainMain.md#6-ý-nghĩa-các-phương-thức-trong-đoạn-code-hàm-main)**
 
-#### Trong các file.dart thư viện muốn kết nối với firebase, thực hiện
+#### Trong các file.dart thư viện muốn kết nối với firebase, thực hiện import thư viện firebase_database
 
 ```dart
 import 'package:firebase_database/firebase_database.dart';
@@ -130,7 +154,7 @@ FirebaseDatabase.instance.ref('users/user123');
 
 ##### Set/Get data Firebase
 
-Tất cả việc “lấy data từ database về” đều được thực hiện thông qua `StreamBuilder<DatabaseEvent>`. Đây chính là nơi app lắng nghe dữ liệu thay đổi từ Firebase và cập nhật giao diện theo thời gian thực.
+Tất cả việc `lấy data từ database về` đều được thực hiện thông qua `StreamBuilder<DatabaseEvent>`. Đây chính là nơi app lắng nghe `dữ liệu thay đổi` từ `Firebase` và cập nhật giao diện theo `thời gian thực`.
 
 ###### Get data từ firebase về app
 
@@ -147,7 +171,7 @@ final bool boolValue = value.toString() == "true" || value.toString() == "1";
 final String stringValue = value.toString();
 ```
 
-Áp dụng và tinh chỉnh nhẹ trong code, Lấy dữ liệu dạng bool từ firebase
+Áp dụng và tinh chỉnh nhẹ trong code, Lấy dữ liệu dạng `bool` từ `firebase`
 
 ```dart
 StreamBuilder<DatabaseEvent>(
@@ -280,7 +304,7 @@ hoặc
 final bool isOn = (snapshot.data?.snapshot.value == 1 || snapshot.data?.snapshot.value == true);
 ```
 
-Lấy dữ liệu có thể thay đổi kiểu từ firebase
+Lấy dữ liệu `có thể thay đổi kiểu` từ `firebase`
 
 ```dart
 StreamBuilder<DatabaseEvent>(
@@ -291,11 +315,11 @@ StreamBuilder<DatabaseEvent>(
 )
 ```
 
-Sau khi lấy dữ liệu về và lưu vào các biến tương ứng, có thể dùng các biến này (variableState, value) để thực hiện các chức năng điều khiển trên App.
+Sau khi lấy dữ liệu về và lưu vào đối tượng `snapshot` của class `DataSnapshot`, tạo các biến tương ứng (`variableState, value`) để lấy 1 giá trị cụ thể muốn truy cập từ `snapshot` và thực hiện các chức năng điều khiển trên App.
 
 ### Set data từ App lên Firebase
 
-Có nhiều cách để gửi data từ App lên firebase như:
+Có nhiều cách để `gửi data` từ App lên `firebase` như:
 
 | Mục đích                                 | Lệnh dùng            | Mô tả                                              |
 | ---------------------------------------- | -------------------- | -------------------------------------------------- |
@@ -333,23 +357,3 @@ _variablePath.child('đối tượng cần thay thế data trên Firebase').set(
 ![Kitchen](./assets/images/Kitchen.png)
 
 ![FirebaseKitchen](./assets/images/firebaseKitchen.png)
-
-## Ẩn file google-services.json để không lộ key secret
-
-Nếu chưa từng `git add` vào repo, chỉ cần thêm lệnh
-
-```dart
-/android/app/google-services.json
-```
-
-vào file `.gitignore`, sau đó thực hiện các lệnh
-
-```bash
-git add .
-git commit -m 'note message'
-git push origin <branch name>
-```
-
-file `google-services.json` sẽ bị ẩn hoàn toàn khỏi repo kể cả trên máy local và trên Github
-
-### Dùng cách như trên, nó sẽ hide cả file trên cả repo local, tốt nhất là tạo 1 file mẫu để khi ai clone về thì tự set file `google-services.json` của mình vào `android/app/`
